@@ -1,13 +1,12 @@
 provider "aws" {
   region     = "{{ region }}"
-  access_key = "REPLACE_ME"
-  secret_key = "REPLACE_ME"
+
 }
 
 resource "aws_security_group" "lb_sg" {
   name        = "lb_security_group_{{ load_balancer_name }}"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = "vpc-0a691b1cda1dea4be"
+  vpc_id      = "vpc-084687c42bc6b6be7"
 
   ingress {
     from_port   = 80
@@ -21,7 +20,7 @@ resource "aws_instance" "web_server" {
   ami                         = "{{ ami }}"
   instance_type               = "{{ instance_type }}"
   availability_zone           = "{{ availability_zone }}"
-  subnet_id                   = "subnet-09a9b4fe4e74051b3"
+  subnet_id                   = "subnet-0dba81b888eb03998"
   vpc_security_group_ids      = [aws_security_group.lb_sg.id]
   tags = {
     Name = "WebServer"
@@ -33,7 +32,7 @@ resource "aws_lb" "application_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sg.id]
-  subnets            = ["subnet-09a9b4fe4e74051b3", "subnet-05860172a9327d826"]
+  subnets            = ["subnet-0dba81b888eb03998", "subnet-0caaa6ff3c583ca10"]
   tags = {
     Name = "{{ load_balancer_name }}"
   }
@@ -43,7 +42,7 @@ resource "aws_lb_target_group" "web_target_group" {
   name     = "web-target-group-{{ load_balancer_name }}"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = "vpc-0a691b1cda1dea4be"
+  vpc_id   = "vpc-084687c42bc6b6be7"
 }
 
 resource "aws_lb_listener" "http_listener" {
